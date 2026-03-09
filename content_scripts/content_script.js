@@ -13,22 +13,47 @@ let is_initialized = false;
 
 // Initialize extension
 function initialize_extension() {
-  if (is_initialized) return;
+  console.log("Word Lookup: initialize_extension called");
+  if (is_initialized) {
+    console.log("Word Lookup: already initialized");
+    return;
+  }
 
   // Load tooltip component
   const script = document.createElement("script");
   script.src = chrome.runtime.getURL("ui/tooltip.js");
+  console.log("Word Lookup: Loading tooltip from:", script.src);
+
   script.onload = () => {
-    tooltip = new WordLookupTooltip();
-    setup_event_listeners();
-    is_initialized = true;
-    console.log("Word Lookup extension initialized");
+    console.log("Word Lookup: tooltip.js loaded successfully");
+    console.log("Word Lookup: Checking if WordLookupTooltip is defined:", typeof WordLookupTooltip);
+
+    if (typeof WordLookupTooltip === "undefined") {
+      console.error("Word Lookup: WordLookupTooltip class is undefined!");
+      console.error("Word Lookup: This may be due to CSP restrictions or script loading issues");
+      console.error("Word Lookup: Check the Network tab for ui/tooltip.js loading");
+      return;
+    }
+
+    try {
+      tooltip = new WordLookupTooltip();
+      console.log("Word Lookup: WordLookupTooltip instance created");
+      setup_event_listeners();
+      is_initialized = true;
+      console.log("Word Lookup extension initialized");
+    } catch (error) {
+      console.error("Word Lookup: Error creating tooltip:", error);
+      console.error("Word Lookup: Error stack:", error.stack);
+    }
   };
+
   script.onerror = (error) => {
-    console.error("Failed to load tooltip component:", error);
+    console.error("Word Lookup: Failed to load tooltip component:", error);
+    console.error("Word Lookup: Script loading error details:", script.src, error);
   };
 
   document.head.appendChild(script);
+  console.log("Word Lookup: Script element appended to head");
 }
 
 // Set up event listeners
