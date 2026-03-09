@@ -14,8 +14,7 @@
   ],
 
   "background": {
-    "service_worker": "background/background.js",
-    "type": "module"
+    "service_worker": "background/background.js"
   },
 
   "content_scripts": [
@@ -32,6 +31,8 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+
+  "action": {},
 
   "web_accessible_resources": [
     {
