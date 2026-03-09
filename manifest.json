@@ -33,6 +33,13 @@
     "128": "icons/icon128.png"
   },
 
+  "web_accessible_resources": [
+    {
+      "resources": ["ui/tooltip.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   }
