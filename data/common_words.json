@@ -1,0 +1,62 @@
+{
+  "hello": {
+    "phonetic": "/həˈləʊ/",
+    "definitions": [
+      {
+        "part_of_speech": "noun",
+        "meaning": "招呼，问候",
+        "example": "She gave me a friendly hello."
+      },
+      {
+        "part_of_speech": "verb",
+        "meaning": "打招呼，问候",
+        "example": "He helloed from across the street."
+      },
+      {
+        "part_of_speech": "interjection",
+        "meaning": "喂，你好",
+        "example": "Hello! How are you?"
+      }
+    ]
+  },
+  "world": {
+    "phonetic": "/wɜːld/",
+    "definitions": [
+      {
+        "part_of_speech": "noun",
+        "meaning": "世界，地球",
+        "example": "He traveled around the world."
+      }
+    ]
+  },
+  "computer": {
+    "phonetic": "/kəmˈpjuːtə(r)/",
+    "definitions": [
+      {
+        "part_of_speech": "noun",
+        "meaning": "计算机，电脑",
+        "example": "She works on her computer all day."
+      }
+    ]
+  },
+  "programming": {
+    "phonetic": "/ˈprəʊɡræmɪŋ/",
+    "definitions": [
+      {
+        "part_of_speech": "noun",
+        "meaning": "编程，程序设计",
+        "example": "He studied programming in college."
+      }
+    ]
+  },
+  "extension": {
+    "phonetic": "/ɪkˈstenʃn/",
+    "definitions": [
+      {
+        "part_of_speech": "noun",
+        "meaning": "扩展，延长",
+        "example": "Chrome browser extension"
+      }
+    ]
+  }
+}
