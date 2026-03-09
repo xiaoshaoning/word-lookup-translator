@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Word Lookup Translator",
+  "version": "1.0.0",
+  "description": "Look up English words with IPA and Chinese definitions",
+
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+
+  "host_permissions": [
+    "https://api.dictionaryapi.dev/*"
+  ],
+
+  "background": {
+    "service_worker": "background/background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_scripts/content_script.js"],
+      "css": ["ui/highlight.css", "ui/tooltip.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "icons": {
+    "16": "icons/icon16.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  },
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
