@@ -139,13 +139,16 @@ function is_english_word(word) {
 
 // Apply highlight to element (handles text nodes)
 function apply_highlight(element) {
+  if (!element) return null;
+
   if (element.nodeType === Node.TEXT_NODE) {
     // For text nodes, highlight the parent element
     if (element.parentElement) {
       element.parentElement.classList.add("word_lookup_highlight");
       return element.parentElement;
     }
-  } else {
+    return null;
+  } else if (element.classList) {
     element.classList.add("word_lookup_highlight");
     return element;
   }
@@ -239,7 +242,12 @@ function handle_mouse_out(event) {
 function handle_word_hover(word_info, x, y) {
   // Apply highlight
   if (last_hovered_element) {
-    last_hovered_element = apply_highlight(last_hovered_element);
+    const highlighted_element = apply_highlight(last_hovered_element);
+    if (highlighted_element) {
+      last_hovered_element = highlighted_element;
+    } else {
+      console.warn("Failed to apply highlight to element");
+    }
   }
 
   // Look up word
