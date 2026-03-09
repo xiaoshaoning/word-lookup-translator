@@ -137,6 +137,28 @@ function is_english_word(word) {
   return /^[a-zA-Z][a-zA-Z\-']*[a-zA-Z]$/.test(word);
 }
 
+// Apply highlight to element (handles text nodes)
+function apply_highlight(element) {
+  if (element.nodeType === Node.TEXT_NODE) {
+    // For text nodes, highlight the parent element
+    if (element.parentElement) {
+      element.parentElement.classList.add("word_lookup_highlight");
+      return element.parentElement;
+    }
+  } else {
+    element.classList.add("word_lookup_highlight");
+    return element;
+  }
+  return null;
+}
+
+// Remove highlight
+function remove_highlight(element) {
+  if (element && element.classList) {
+    element.classList.remove("word_lookup_highlight");
+  }
+}
+
 // Handle mouse movement with debouncing
 let debounce_timer = null;
 function handle_mouse_move(event) {
@@ -167,7 +189,7 @@ function process_mouse_position(x, y) {
       tooltip.hide();
     }
     if (last_hovered_element) {
-      last_hovered_element.classList.remove("word-lookup-highlight");
+      remove_highlight(last_hovered_element);
       last_hovered_element = null;
     }
     last_hovered_word = null;
@@ -180,7 +202,12 @@ function process_mouse_position(x, y) {
     return;
   }
 
-  // New word, set up hover timer
+  // New word, remove previous highlight if exists
+  if (last_hovered_element) {
+    remove_highlight(last_hovered_element);
+  }
+
+  // Set up hover timer
   last_hovered_word = word_info.word;
   last_hovered_element = word_info.element;
 
@@ -198,7 +225,7 @@ function handle_mouse_out(event) {
       hover_timer = null;
     }
     if (last_hovered_element) {
-      last_hovered_element.classList.remove("word-lookup-highlight");
+      remove_highlight(last_hovered_element);
       last_hovered_element = null;
     }
     if (tooltip && tooltip.is_visible()) {
@@ -212,7 +239,7 @@ function handle_mouse_out(event) {
 function handle_word_hover(word_info, x, y) {
   // Apply highlight
   if (last_hovered_element) {
-    last_hovered_element.classList.add("word-lookup-highlight");
+    last_hovered_element = apply_highlight(last_hovered_element);
   }
 
   // Look up word
@@ -252,7 +279,7 @@ function cleanup() {
   }
 
   if (last_hovered_element) {
-    last_hovered_element.classList.remove("word-lookup-highlight");
+    remove_highlight(last_hovered_element);
     last_hovered_element = null;
   }
 
