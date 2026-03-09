@@ -1,0 +1,85 @@
+.word_lookup_tooltip {
+  position: absolute;
+  z-index: 999999;
+  min-width: 200px;
+  max-width: 300px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #4285f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333333;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.word_lookup_tooltip_visible {
+  opacity: 1;
+}
+
+.word_lookup_tooltip_header {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.word_lookup_tooltip_word {
+  font-weight: 600;
+  font-size: 16px;
+  color: #1a73e8;
+  margin-right: 8px;
+}
+
+.word_lookup_tooltip_phonetic {
+  font-style: italic;
+  color: #5f6368;
+  font-size: 13px;
+}
+
+.word_lookup_tooltip_definitions {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.word_lookup_tooltip_part_of_speech {
+  font-weight: 600;
+  color: #188038;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin: 8px 0 4px;
+}
+
+.word_lookup_tooltip_meaning {
+  margin-left: 12px;
+  color: #333333;
+  margin-bottom: 4px;
+}
+
+.word_lookup_tooltip_example {
+  margin-left: 24px;
+  color: #5f6368;
+  font-size: 12px;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.word_lookup_tooltip_source {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed #eaeaea;
+  font-size: 11px;
+  color: #80868b;
+  text-align: right;
+}
+
+.word_lookup_tooltip_error {
+  color: #d93025;
+  font-style: italic;
+}
