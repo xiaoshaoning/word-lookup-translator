@@ -1,85 +1,83 @@
+/* Bing-style word lookup card */
 .word_lookup_tooltip {
-  position: absolute;
-  z-index: 999999;
-  min-width: 200px;
-  max-width: 300px;
-  padding: 12px;
+  position: fixed;
+  z-index: 2147483647;
+  max-width: 340px;
+  padding: 12px 14px 6px;
   background: #ffffff;
-  border: 1px solid #4285f4;
+  border: 1px solid #dfe1e5;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #333333;
-  pointer-events: none;
+  color: #202124;
+  text-align: left;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
 }
 
-.word_lookup_tooltip_visible {
+.word_lookup_tooltip.wl-visible {
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
-.word_lookup_tooltip_header {
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #eaeaea;
+.word_lookup_tooltip .wl-head {
   display: flex;
-  justify-content: space-between;
   align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.word_lookup_tooltip_word {
+.word_lookup_tooltip .wl-word {
+  font-size: 17px;
   font-weight: 600;
-  font-size: 16px;
-  color: #1a73e8;
-  margin-right: 8px;
+  color: #1f1f1f;
 }
 
-.word_lookup_tooltip_phonetic {
-  font-style: italic;
-  color: #5f6368;
+.word_lookup_tooltip .wl-ipa {
   font-size: 13px;
+  color: #80868b;
 }
 
-.word_lookup_tooltip_definitions {
-  max-height: 200px;
-  overflow-y: auto;
+.word_lookup_tooltip .wl-defs {
+  margin-top: 6px;
 }
 
-.word_lookup_tooltip_part_of_speech {
-  font-weight: 600;
-  color: #188038;
-  font-size: 12px;
-  text-transform: uppercase;
-  margin: 8px 0 4px;
+.word_lookup_tooltip .wl-def {
+  color: #202124;
 }
 
-.word_lookup_tooltip_meaning {
-  margin-left: 12px;
-  color: #333333;
-  margin-bottom: 4px;
+.word_lookup_tooltip .wl-empty {
+  color: #80868b;
 }
 
-.word_lookup_tooltip_example {
-  margin-left: 24px;
-  color: #5f6368;
-  font-size: 12px;
-  font-style: italic;
-  margin-bottom: 8px;
-}
-
-.word_lookup_tooltip_source {
+.word_lookup_tooltip .wl-foot {
   margin-top: 8px;
   padding-top: 6px;
-  border-top: 1px dashed #eaeaea;
-  font-size: 11px;
-  color: #80868b;
+  border-top: 1px solid #ececec;
   text-align: right;
 }
 
-.word_lookup_tooltip_error {
-  color: #d93025;
-  font-style: italic;
+.word_lookup_tooltip .wl-close {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1a73e8;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.word_lookup_tooltip .wl-close:hover {
+  text-decoration: underline;
+}
+
+.word_lookup_tooltip .wl-hint {
+  color: #5f6368;
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word Lookup Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Word Lookup Extension Test</h1>
+
+    <div class="test-section">
+        <h2>Simple Text</h2>
+        <p>This is a test paragraph with the word <strong>hello</strong> in it.
+           You should be able to hover over hello and see its definition.</p>
+        <p>Another paragraph with the word <strong>world</strong> here.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>Technical Content</h2>
+        <p>The <strong>computer</strong> is running a <strong>programming</strong>
+           <strong>extension</strong> for Chrome browser.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>Compound Words</h2>
+        <p>Test hyphenated words: mother-in-law, well-known, state-of-the-art.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>Words Not in Local Dictionary</h2>
+        <p>Words like "serendipity" or "ephemeral" should trigger API lookup.</p>
+    </div>
+
+    <script>
+        // Simple page loaded indicator
+        console.log("Test page loaded for Word Lookup extension");
+    </script>
+</body>
+</html>

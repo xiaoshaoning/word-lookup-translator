@@ -1,0 +1,8 @@
+{
+  "name": "dictionary-chrome-extension",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node test/parser.test.mjs"
+  }
+}
