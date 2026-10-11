@@ -1,7 +1,27 @@
 {
-  "name": "dictionary-chrome-extension",
+  "name": "word-lookup-translator",
+  "version": "1.1.1",
   "private": true,
   "type": "module",
+  "description": "Chrome extension: hover an English word for a Bing-style card with IPA and Chinese definitions (dict.cn).",
+  "license": "MIT",
+  "author": "Shaoning Xiao",
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "dictionary",
+    "english",
+    "chinese",
+    "dict.cn"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaoshaoning/word-lookup-translator.git"
+  },
+  "homepage": "https://github.com/xiaoshaoning/word-lookup-translator#readme",
+  "bugs": {
+    "url": "https://github.com/xiaoshaoning/word-lookup-translator/issues"
+  },
   "scripts": {
     "test": "node test/parser.test.mjs"
   }
