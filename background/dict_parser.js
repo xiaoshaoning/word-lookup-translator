@@ -35,7 +35,13 @@ function text(html) {
  */
 export function parseDictCn(html) {
   const head = html.match(/<h1[^>]*class="keyword"[^>]*>([\s\S]*?)<\/h1>/i);
-  if (!head) return null;
+  if (!head) {
+    // dict.cn's genuine "no such word" pages are recognizable; anything else
+    // (a challenge/block page, unexpected markup) is transient and must not be
+    // reported — or cached — as "no definition".
+    if (/该词条未找到|404页面/.test(html)) return null;
+    throw new Error("unrecognized dict.cn response");
+  }
   const headword = text(head[1]);
   if (!headword) return null;
 
@@ -45,7 +51,7 @@ export function parseDictCn(html) {
     for (const span of phonetic[1].matchAll(/<span>([\s\S]*?)<\/span>/gi)) {
       const label = (span[1].match(/^\s*(英|美)/) || [])[1];
       const ipa = span[1].match(/<bdo[^>]*>([\s\S]*?)<\/bdo>/i);
-      if (label && ipa) pronunciations.push({ label, ipa: text(ipa[1]) });
+      if (label && ipa) pronunciations.push({ label, ipa: text(ipa[1]).replace(/^\[|\]$/g, "").trim() });
     }
   }
 

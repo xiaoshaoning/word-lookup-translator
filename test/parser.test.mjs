@@ -17,8 +17,8 @@ const HTML = `<!doctype html><html><body>
 const data = parseDictCn(HTML);
 assert.equal(data.headword, "reconsider");
 assert.deepEqual(data.pronunciations, [
-  { label: "英", ipa: "[ˌriːkən'sɪdə(r)]" },
-  { label: "美", ipa: "[ˌriːkən'sɪdər]" },
+  { label: "英", ipa: "ˌriːkən'sɪdə(r)" },
+  { label: "美", ipa: "ˌriːkən'sɪdər" },
 ]);
 assert.deepEqual(data.basicTranslations, [{ pos: "v.", meanings: "重新考虑；再斟酌" }]);
 
@@ -28,6 +28,8 @@ assert.deepEqual(
     .basicTranslations,
   [{ pos: "v.", meanings: "去" }, { pos: "n.", meanings: "尝试" }],
 );
-assert.equal(parseDictCn("<html><body>no entry</body></html>"), null);
+assert.equal(parseDictCn('<html><head><title>该词条未找到_海词词典</title></head><body>您要查找的是不是： hello</body></html>'), null);
+// An unrecognized page (e.g. a challenge/block page) is transient, not "missing".
+assert.throws(() => parseDictCn("<html><body>no entry</body></html>"));
 
 console.log("dict_parser: OK");

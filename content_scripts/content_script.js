@@ -6,8 +6,12 @@
   const HOVER_DELAY_MS = 250;
   const HIDE_DELAY_MS = 200;
   const HIGHLIGHT_NAME = "word-lookup";
-  const WORD_CHAR = /[A-Za-z'-]/;
+  // Pages inject invisible characters inside words (soft hyphen, zero-width
+  // joiners) and use curly apostrophes; left as-is they 404 a dict.cn lookup.
+  const WORD_CHAR = /[A-Za-z'\u2019\u00AD\u200B-\u200D\uFEFF-]/;
   const WORD_RE = /^[A-Za-z][A-Za-z'-]*[A-Za-z]$/;
+  const INVISIBLE = /[\u00AD\u200B-\u200D\uFEFF]/g;
+  const CURLY_APOSTROPHE = /[\u2018\u2019]/g;
 
   let enabled = true;
   let hoverTimer = null;
@@ -76,12 +80,12 @@
     while (start > 0 && WORD_CHAR.test(text[start - 1])) start -= 1;
     while (end < text.length - 1 && WORD_CHAR.test(text[end + 1])) end += 1;
 
-    const word = text.slice(start, end + 1);
+    const word = text.slice(start, end + 1).replace(INVISIBLE, "").replace(CURLY_APOSTROPHE, "'");
     if (!WORD_RE.test(word)) return null;
 
     const range = document.createRange();
     range.setStart(node, start);
-    range.setEnd(node, end + 1);
+    range.setEnd(node, end + 1); // highlight the raw token, invisible chars included
     return { word, range };
   }
 
@@ -182,7 +186,6 @@
   }
 
   async function trigger(word, range) {
-    activeWord = word;
     highlight(range);
     const { entry, failed } = await lookup(word);
     if (activeWord !== word) return; // pointer moved on while fetching
@@ -196,6 +199,7 @@
 
     const hit = wordAtPoint(event.clientX, event.clientY);
     if (!hit) {
+      activeWord = null; // drop the claim so a stale lookup can't render
       scheduleHide();
       return;
     }
@@ -204,6 +208,8 @@
       return;
     }
 
+    // Claim the word now: a lookup for a word the pointer has left must not show.
+    activeWord = hit.word;
     clearTimeout(hoverTimer);
     clearTimeout(hideTimer);
     unhighlight();
