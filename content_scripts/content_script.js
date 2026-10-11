@@ -86,40 +86,48 @@
   }
 
   // --- rendering ---
-  function render(data) {
-    ui.word.textContent = data.headword;
+  function render(word, entry, failed) {
+    ui.word.textContent = entry ? entry.headword : word;
 
-    const ipa = data.pronunciations.map((p) => `${p.label} [${p.ipa}]`).join("  ");
+    const ipa = entry ? entry.pronunciations.map((p) => `${p.label} [${p.ipa}]`).join("  ") : "";
     ui.ipa.textContent = ipa;
     ui.ipa.hidden = !ipa;
 
     ui.defs.replaceChildren();
-    if (!data.basicTranslations.length) {
-      ui.defs.append(definitionRow("wl-def wl-empty", "", "未找到释义"));
-      return;
-    }
-    for (const item of data.basicTranslations) {
-      ui.defs.append(definitionRow("wl-def", item.pos, item.meanings));
+    if (failed) {
+      ui.defs.append(messageRow("查询失败，请重试"));
+    } else if (!entry || !entry.basicTranslations.length) {
+      ui.defs.append(messageRow("未找到释义"));
+    } else {
+      for (const item of entry.basicTranslations) {
+        ui.defs.append(definitionRow(item.pos, item.meanings));
+      }
     }
   }
 
-  function definitionRow(className, pos, meanings) {
+  function definitionRow(pos, meanings) {
     const row = document.createElement("div");
-    row.className = className;
-    if (pos) {
-      const span = document.createElement("span");
-      span.className = "wl-pos";
-      span.textContent = pos;
-      row.append(span, " ");
-    }
-    row.append(meanings); // text node, never innerHTML
+    row.className = "wl-def";
+    const posElement = document.createElement("span");
+    posElement.className = "wl-pos";
+    posElement.textContent = pos;
+    row.append(posElement, " ", meanings); // text nodes, never innerHTML
     return row;
+  }
+
+  function messageRow(text) {
+    const element = document.createElement("div");
+    element.className = "wl-empty";
+    element.textContent = text;
+    return element;
   }
 
   function place(range) {
     const rect = range.getBoundingClientRect();
     const gap = 6;
     const el = ui.el;
+    // Measure from the top-left corner so the shrink-to-fit width is computed
+    // against the whole viewport, not a half-off-screen position.
     el.style.left = "0px";
     el.style.top = "0px";
     const size = el.getBoundingClientRect();
@@ -135,8 +143,8 @@
     el.style.top = `${Math.round(top)}px`;
   }
 
-  function show(data, range) {
-    render(data);
+  function show(word, range, entry, failed) {
+    render(word, entry, failed);
     ui.el.classList.add("wl-visible");
     ui.el.setAttribute("aria-hidden", "false");
     place(range);
@@ -157,15 +165,18 @@
   }
 
   // --- lookup through the background worker ---
+  // Resolves to { entry, failed }. failed marks a transient error, which is
+  // never cached (a null entry, by contrast, means dict.cn has no such word).
   function lookup(word) {
     const key = word.toLowerCase();
     if (cache.has(key)) return Promise.resolve(cache.get(key));
 
     return new Promise((resolve) => {
       chrome.runtime.sendMessage({ action: "lookup_word", word }, (response) => {
-        const data = !chrome.runtime.lastError && response?.ok ? response.data : null;
-        cache.set(key, data);
-        resolve(data);
+        const failed = Boolean(chrome.runtime.lastError) || Boolean(response?.error);
+        const result = { entry: failed ? null : response?.entry ?? null, failed };
+        if (!failed) cache.set(key, result);
+        resolve(result);
       });
     });
   }
@@ -173,9 +184,9 @@
   async function trigger(word, range) {
     activeWord = word;
     highlight(range);
-    const data = await lookup(word);
+    const { entry, failed } = await lookup(word);
     if (activeWord !== word) return; // pointer moved on while fetching
-    show(data || { headword: word, pronunciations: [], basicTranslations: [] }, range);
+    show(word, range, entry, failed);
   }
 
   // --- events ---
