@@ -86,6 +86,22 @@
     const range = document.createRange();
     range.setStart(node, start);
     range.setEnd(node, end + 1); // highlight the raw token, invisible chars included
+
+    // caretRangeFromPoint returns the *nearest* caret even when the pointer is in
+    // blank space (right of a line, below a paragraph, in the gap between words),
+    // so require the pointer to actually be on the word before looking it up.
+    const rect = range.getBoundingClientRect();
+    const hitPad = 2;
+    if (
+      rect.width === 0 ||
+      x < rect.left - hitPad ||
+      x > rect.right + hitPad ||
+      y < rect.top - hitPad ||
+      y > rect.bottom + hitPad
+    ) {
+      return null;
+    }
+
     return { word, range };
   }
 
