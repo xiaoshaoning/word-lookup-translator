@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 });
 
 async function isEnabled() {
-  const { word_lookup_enabled: enabled = true } = await chrome.storage.local.get("word_lookup_enabled");
+  const { word_lookup_enabled: enabled = false } = await chrome.storage.local.get("word_lookup_enabled");
   return enabled;
 }
 
@@ -42,6 +42,9 @@ async function refreshBadge() {
 
 chrome.runtime.onInstalled.addListener(refreshBadge);
 chrome.runtime.onStartup.addListener(refreshBadge);
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && "word_lookup_enabled" in changes) refreshBadge();
+});
 chrome.action.onClicked.addListener(async () => {
   await chrome.storage.local.set({ word_lookup_enabled: !(await isEnabled()) });
   refreshBadge();

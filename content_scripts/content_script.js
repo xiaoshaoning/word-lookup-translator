@@ -13,7 +13,7 @@
   const INVISIBLE = /[\u00AD\u200B-\u200D\uFEFF]/g;
   const CURLY_APOSTROPHE = /[\u2018\u2019]/g;
 
-  let enabled = true;
+  let enabled = false; // off by default; F8 or the toolbar icon turns it on
   let hoverTimer = null;
   let hideTimer = null;
   let activeWord = null;
@@ -28,10 +28,8 @@
     el.innerHTML =
       '<div class="wl-head"><span class="wl-word"></span><span class="wl-ipa"></span></div>' +
       '<div class="wl-defs"></div>' +
-      '<div class="wl-foot"><button type="button" class="wl-close">关闭取词<span class="wl-hint">（点扩展图标重开）</span></button></div>';
+      '<div class="wl-foot"><button type="button" class="wl-close">关闭取词<span class="wl-hint">（按 F8 重开）</span></button></div>';
     el.querySelector(".wl-close").addEventListener("click", () => setEnabled(false));
-    el.addEventListener("mouseenter", () => clearTimeout(hideTimer));
-    el.addEventListener("mouseleave", scheduleHide);
     document.body.appendChild(el);
     return {
       el,
@@ -44,6 +42,20 @@
   function setEnabled(value) {
     enabled = value;
     if (!enabled) hide();
+  }
+
+  async function toggle() {
+    const { word_lookup_enabled: on = false } = await chrome.storage.local.get("word_lookup_enabled");
+    setEnabled(!on);
+    await chrome.storage.local.set({ word_lookup_enabled: !on });
+  }
+
+  // Pointer inside the visible card: no new lookup, keep the card open. Tested
+  // against the card's box because the pointer leaves it onto page content.
+  function overTooltip(x, y) {
+    if (!ui.el.classList.contains("wl-visible")) return false;
+    const r = ui.el.getBoundingClientRect();
+    return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
   }
 
   // --- highlight: CSS Custom Highlight API, so the page DOM is never mutated ---
@@ -211,7 +223,10 @@
   // --- events ---
   function onMove(event) {
     if (!enabled) return;
-    if (ui.el.contains(event.target)) return; // keep the card open while pointing at it
+    if (overTooltip(event.clientX, event.clientY)) {
+      clearTimeout(hideTimer);
+      return; // pointing at the card: no lookup until the pointer leaves it
+    }
 
     const hit = wordAtPoint(event.clientX, event.clientY);
     if (!hit) {
@@ -233,15 +248,24 @@
   }
 
   document.addEventListener("mousemove", onMove, { passive: true });
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key !== "F8" || event.repeat) return;
+      event.preventDefault();
+      toggle();
+    },
+    true,
+  );
   document.addEventListener("mouseleave", hide);
   document.addEventListener("scroll", hide, { capture: true, passive: true });
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "local" && "word_lookup_enabled" in changes) {
-      setEnabled(changes.word_lookup_enabled.newValue !== false);
+      setEnabled(changes.word_lookup_enabled.newValue === true);
     }
   });
   chrome.storage.local.get("word_lookup_enabled", (values) => {
-    setEnabled(values.word_lookup_enabled !== false);
+    setEnabled(values.word_lookup_enabled === true);
   });
 })();

@@ -13,8 +13,8 @@ British/American IPA and Chinese definitions — powered by [dict.cn](https://di
   part-of-speech + Chinese glosses (e.g. `v. 重新考虑；再斟酌`).
 - **Word-level highlight** using the CSS Custom Highlight API — it never
   mutates the page DOM.
-- **取词 on/off toggle** — click `关闭取词` in the card, or click the toolbar
-  icon to switch it back on (the badge shows `OFF` when disabled).
+- **取词 on/off toggle** — press `F8` on any page, or click the toolbar icon
+  (the badge shows `OFF` when disabled). 取词 starts **off**.
 - **No tracking, no accounts.** The extension only talks to `dict.cn`.
 
 ## Install (unpacked)
@@ -22,13 +22,15 @@ British/American IPA and Chinese definitions — powered by [dict.cn](https://di
 1. Clone or download this repository.
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and select the repository folder.
-4. Hover any English word on a page.
+4. Press `F8` to turn 取词 on, then hover any English word on a page.
 
 ## Usage
 
+- Press `F8` (or click the toolbar icon) to toggle 取词.
 - Hover a word for ~0.25 s → the card appears. Move away to dismiss.
-- Click `关闭取词` to disable. Click the **extension toolbar icon** to toggle it
-  back on.
+- While the pointer is over the card, no lookup happens; move out of the card to
+  look up the word under the pointer.
+- Click `关闭取词` in the card to switch it off.
 
 ## How it works
 
@@ -96,7 +98,8 @@ npm test   # runs the dict.cn parser self-check
 
 - **悬停查词**：卡片显示单词、英/美音标、词性 + 中文释义（如 `v. 重新考虑；再斟酌`）。
 - **单词级高亮**：使用 CSS Custom Highlight API，不改动页面 DOM。
-- **取词开关**：点卡片里的 `关闭取词` 关闭；点工具栏图标重新开启（关闭时图标显示 `OFF`）。
+- **取词开关**：按 `F8` 或点工具栏图标开/关（关闭时图标显示 `OFF`），默认**关闭**。
+- **鼠标在卡片上时不取词**：指针移出卡片后才对下方单词取词。
 - **无追踪、无账号**，只访问 dict.cn。
 
 ### 安装（开发者模式）
@@ -104,12 +107,14 @@ npm test   # runs the dict.cn parser self-check
 1. 克隆或下载本仓库。
 2. 打开 `chrome://extensions`，开启右上角**开发者模式**。
 3. 点**加载已解压的扩展程序**，选择本仓库目录。
-4. 在网页上悬停英文单词即可。
+4. 按 `F8` 开启取词，然后在网页上悬停英文单词即可。
 
 ### 使用
 
+- 按 `F8`（或点**扩展工具栏图标**）开关取词，默认关闭。
 - 悬停约 0.25 秒弹出卡片，移开即消失。
-- 点 `关闭取词` 关闭；点**扩展工具栏图标**重新开启。
+- 指针在卡片范围内时不取词，移出卡片后才对下方单词取词。
+- 点卡片里的 `关闭取词` 关闭。
 
 ### 说明
 
